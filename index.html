@@ -66,7 +66,7 @@
 .original-board thead th.leader-col{box-shadow:inset 0 3px #d4ae53}
 .original-board tbody td.leader-col{background:inherit}
 @media(max-width:700px){.original-board tbody td.pick-cell.result-w .badge,.original-board tbody td.pick-cell.result-l .badge{font-size:11px;padding:4px 7px}}
-</style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
+.original-board tbody td.pick-cell .badge{font-size:10px!important;padding:2px 5px!important;font-weight:750!important;line-height:1.15!important;border-radius:6px!important}@media(max-width:700px){.original-board tbody td.pick-cell .badge{font-size:9px!important;padding:2px 5px!important}} </style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
 <nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
 <section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
 <section id="history" class="hidden"><div class="panel"><h2>Season Pick History</h2><div id="historyTable"></div></div></section>
@@ -174,7 +174,7 @@ const nflAliases={'ARI':'ari','ATL':'atl','BAL':'bal','BUF':'buf','CAR':'car','C
 let syncing=false;
 let currentNflWeek=null;
 let didAutoScroll=false;
-function setCurrentWeek(w){if(!Number.isInteger(w)||w<1||w>18)return;currentNflWeek=w;const label=$('currentWeekLabel');if(label)label.textContent='Week '+w+' · Current';render();if(!didAutoScroll){didAutoScroll=true;const row=document.querySelector('.original-board tr[data-week="'+w+'"]');if(row&&window.scrollY<100)requestAnimationFrame(()=>row.scrollIntoView({block:'center',behavior:'smooth'}));}}
+function setCurrentWeek(w){if(!Number.isInteger(w)||w<1||w>18)return;currentNflWeek=w;const label=$('currentWeekLabel');if(label)label.textContent='Week '+w+' · Current';render();}
 async function findCurrentWeek(){try{const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season=2026&seasontype=2',{cache:'no-store'});if(!r.ok)return;const j=await r.json();const w=Number(j.week?.number);if(w>=1&&w<=18)setCurrentWeek(w);}catch(e){console.warn('NFL current week unavailable',e)}}
 async function syncScores(){
  if(syncing)return;syncing=true;
