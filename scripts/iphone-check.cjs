@@ -46,6 +46,7 @@ const path = require('path');
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({events:[{date:'2026-11-01T18:00:00Z',competitions:[{competitors:[{homeAway:'home',team:{abbreviation:'BUF',displayName:'Buffalo Bills'}},{homeAway:'away',team:{abbreviation:'MIA',displayName:'Miami Dolphins'}}]}]}]}) });
   });
   await page.locator('#quickCancel').click();
+  await page.evaluate(() => { delete scheduleCache[8]; });
   await target.click();
   await page.locator('.schedule-choice').first().waitFor({ timeout: 12000 });
   const choices = page.locator('.schedule-choice');
