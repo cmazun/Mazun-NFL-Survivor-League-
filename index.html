@@ -95,6 +95,18 @@
  .original-board .add-pick{min-height:55px!important}
  .original-board .add-pick .plus{width:29px;height:29px;font-size:22px}
 }
+
+.season-chance{display:block;font-size:15px;font-weight:900;color:#72ebc9;line-height:1.1;margin-bottom:5px;white-space:nowrap}
+.season-chance small{display:block;font-size:8px;font-weight:750;letter-spacing:.5px;color:#9acfc6;margin-top:2px}
+.schedule-choices{max-height:35vh;overflow-y:auto;overscroll-behavior:contain;margin:10px 0;border-radius:10px}
+.schedule-title{font-size:12px;font-weight:800;color:#a9d9e6;margin:6px 0 10px}
+.schedule-choice{width:100%;display:flex;align-items:center;text-align:left;gap:10px;background:#142d40;color:#eaf5ff;border:1px solid #33536a;border-radius:9px;padding:8px;margin-bottom:5px;cursor:pointer}
+.schedule-choice.selected{border:2px solid #63e8bc;background:#204d4a}
+.schedule-choice .logo{width:35px;height:35px;flex-shrink:0}
+.schedule-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.schedule-text strong{font-size:13px}.schedule-text small{font-size:11px;color:#c0d5e0}
+.schedule-loading{font-size:12px;color:#bed0df;padding:12px}
+@media(max-width:700px){.season-chance{font-size:13px;margin-bottom:5px}.season-chance small{font-size:7px;letter-spacing:0}.schedule-choices{max-height:34vh}}
 </style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
 <nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
 <section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
@@ -102,7 +114,7 @@
 <section id="manage" class="hidden"><div class="panel"><h2>Add or update a pick</h2><div class="controls"><label class="field">Player<select id="player"></select></label><label class="field">Week<select id="week"></select></label><label class="field">NFL team<select id="team"></select></label><label class="field">Result<select id="result"><option value="P">Pending</option><option value="W">Win</option><option value="L">Loss</option></select></label><button class="action primary" id="save">Save Pick</button><button class="action" id="remove">Remove Pick</button></div><p id="feedback" class="note"></p><p class="note">A team can only be selected once per player across the season. Changes save on this device only.</p></div></section>
 <section id="teams" class="hidden"><div class="panel"><h2>Teams remaining</h2><div class="controls"><label class="field">Player<select id="teamPlayer"></select></label></div><p id="teamCount"></p><div id="teamList"></div></div></section>
 <section id="about" class="hidden"><div class="panel"><h2>Rules & Data</h2><p>Each participant selects one NFL team per week. The same team cannot be selected twice by that participant. This dashboard records wins and losses without automatically eliminating players, reflecting the supplied scorecard.</p><p><strong>Important:</strong> Editing is stored in your browser's local storage, not synchronized between devices or committed to GitHub. Export your data regularly.</p><button class="action primary" id="export">Export JSON Backup</button> <label class="action" style="display:inline-block">Import JSON Backup<input id="import" type="file" accept=".json,application/json" style="display:none"></label><button class="action" id="reset">Reset to original sheet</button></div></section>
-</div><div id="pickOverlay" class="picker-overlay hidden" role="presentation"><div class="picker-sheet" role="dialog" aria-modal="true" aria-labelledby="pickerTitle"><h2 id="pickerTitle">Choose a team</h2><p class="picker-note" id="pickerSubtitle"></p><label class="field">Available NFL teams<select id="quickTeam"></select></label><p class="picker-note" id="pickerAvailability"></p><p id="quickError" class="picker-error" aria-live="polite"></p><div class="picker-actions"><button class="action" id="quickCancel">Cancel</button><button class="action primary" id="quickSave">Save Pick</button></div></div></div><script>
+</div><div id="pickOverlay" class="picker-overlay hidden" role="presentation"><div class="picker-sheet" role="dialog" aria-modal="true" aria-labelledby="pickerTitle"><h2 id="pickerTitle">Choose a team</h2><p class="picker-note" id="pickerSubtitle"></p><label class="field">Available NFL teams<select id="quickTeam"></select></label><p class="picker-note" id="pickerAvailability"></p><div id="scheduleChoices" class="schedule-choices" aria-live="polite"></div><p id="quickError" class="picker-error" aria-live="polite"></p><div class="picker-actions"><button class="action" id="quickCancel">Cancel</button><button class="action primary" id="quickSave">Save Pick</button></div></div></div><script>
 const players=['Ryan','Corey','Tyler','Dad'];
 const teams=['Arizona Cardinals','Atlanta Falcons','Baltimore Ravens','Buffalo Bills','Carolina Panthers','Chicago Bears','Cincinnati Bengals','Cleveland Browns','Dallas Cowboys','Denver Broncos','Detroit Lions','Green Bay Packers','Houston Texans','Indianapolis Colts','Jacksonville Jaguars','Kansas City Chiefs','Las Vegas Raiders','Los Angeles Chargers','Los Angeles Rams','Miami Dolphins','Minnesota Vikings','New England Patriots','New Orleans Saints','New York Giants','New York Jets','Philadelphia Eagles','Pittsburgh Steelers','San Francisco 49ers','Seattle Seahawks','Tampa Bay Buccaneers','Tennessee Titans','Washington Commanders'];
 const teamCodes=Object.fromEntries(teams.map((t,i)=>[t,["ari","atl","bal","buf","car","chi","cin","cle","dal","den","det","gb","hou","ind","jax","kc","lv","lac","lar","mia","min","ne","no","nyg","nyj","phi","pit","sf","sea","tb","ten","wsh"][i]]));
@@ -132,8 +144,53 @@ for(const p of players)for(const x of data[p]){
 const $=id=>document.getElementById(id);const save=()=>{localStorage.setItem(key,JSON.stringify(data));localStorage.setItem(updatedKey,new Date().toISOString());displayUpdate()};
 function badge(v){return '<span class="badge '+v+'">'+(v==='W'?'WIN':v==='L'?'LOSS':'PENDING')+'</span>'}
 const shortTeam=t=>({ 'Los Angeles Chargers':'LAC','Los Angeles Rams':'LAR','New England Patriots':'NE','New York Giants':'NYG','New York Jets':'NYJ','San Francisco 49ers':'SF','Green Bay Packers':'GB','Tampa Bay Buccaneers':'TB','Kansas City Chiefs':'KC','New Orleans Saints':'NO','Las Vegas Raiders':'LV'}[t]||t.split(' ').slice(-1)[0]);
+
+/* Estimated season win shares: seeded Monte Carlo, 50/50 unknown future games, ties split. */
+function seasonChances(){
+ const totals=players.map(p=>{const picks=data[p],w=picks.filter(x=>x.result==='W').length,l=picks.filter(x=>x.result==='L').length;return {w,l,left:Math.max(0,18-w-l)};});
+ const wins=[0,0,0,0];let seed=20261026;
+ const rand=()=>{seed=(Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296};
+ for(let run=0;run<6000;run++){
+  const scores=totals.map(t=>{let w=t.w;for(let k=0;k<t.left;k++)if(rand()<.5)w++;return w});
+  const best=Math.max(...scores),leaders=scores.map((x,i)=>x===best?i:-1).filter(i=>i>=0);
+  for(const i of leaders)wins[i]+=1/leaders.length;
+ }
+ return Object.fromEntries(players.map((p,i)=>[p,Math.round(wins[i]/60)]));
+}
+const scheduleCache={};
+async function loadWeekSchedule(w){
+ if(scheduleCache[w])return scheduleCache[w];
+ const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season=2026&seasontype=2&week='+w,{cache:'no-store'});
+ if(!r.ok)throw Error('Schedule unavailable');
+ const j=await r.json(),games={};
+ for(const event of j.events||[]){
+  const sides=event.competitions?.[0]?.competitors||[];
+  if(sides.length!==2)continue;
+  for(const side of sides){
+   const code=nflAliases[side.team?.abbreviation]||String(side.team?.abbreviation||'').toLowerCase();
+   const opponent=sides.find(x=>x!==side);
+   games[code]={opponent:opponent?.team?.displayName||opponent?.team?.name||'Opponent TBD',home:side.homeAway==='home',time:event.date||null};
+  }
+ }
+ scheduleCache[w]=games;return games;
+}
+async function showScheduleChoices(p,w,available,selected){
+ const el=$('scheduleChoices');if(!el)return;
+ el.innerHTML='<div class="schedule-loading">Loading Week '+w+' opponents and kickoff times…</div>';
+ try{
+  const games=await loadWeekSchedule(w);
+  if(!editingPick||editingPick.p!==p||editingPick.w!==w)return;
+  const fmt=date=>{if(!date)return 'Time TBD';const d=new Date(date);return isNaN(d)?'Time TBD':d.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZone:'America/New_York',timeZoneName:'short'})};
+  el.innerHTML='<div class="schedule-title">Week '+w+' matchups · Tap a team to select</div>'+available.map(t=>{
+   const g=games[teamCodes[t]];
+   return '<button type="button" class="schedule-choice'+(selected===t?' selected':'')+'" data-team="'+t+'">'+logo(t)+'<span class="schedule-text"><strong>'+t+'</strong><small>'+(g?(g.home?'vs ':'@ ')+g.opponent:'Matchup not available')+'</small><small>'+(g?fmt(g.time):'Kickoff TBD')+'</small></span></button>';
+  }).join('');
+ }catch(e){if(editingPick&&editingPick.p===p&&editingPick.w===w)el.innerHTML='<div class="schedule-loading">Schedule temporarily unavailable. You can still choose from the dropdown above.</div>';}
+}
+
 function render(){const totals=p=>({w:data[p].filter(x=>x.result==='W').length,l:data[p].filter(x=>x.result==='L').length,p:data[p].filter(x=>x.result==='P').length});
 const ranking=players.map(p=>({name:p,...totals(p)})).sort((a,b)=>b.w-a.w||a.l-b.l||a.name.localeCompare(b.name));
+const chances=seasonChances();
 const leaderNames=ranking.filter(x=>x.w===ranking[0].w&&x.l===ranking[0].l).map(x=>x.name);
 const rankOf=p=>{const t=totals(p);return 1+ranking.filter(x=>x.w>t.w||(x.w===t.w&&x.l<t.l)).length};
 const ordinal=n=>n+(n===1?'st':n===2?'nd':n===3?'rd':'th');
@@ -165,12 +222,15 @@ function openQuickPick(p,w){
  $('pickerSubtitle').textContent=current?'Change this pick (previous: '+current.team+').':'Choose a team '+p+' has not used this season.';
  $('quickTeam').innerHTML='<option value="">Select a team</option>'+available.map(t=>'<option value="'+t+'">'+t+'</option>').join('');
  $('quickTeam').value=current?.team||'';
+ showScheduleChoices(p,w,available,current?.team||'');
  $('pickerAvailability').textContent=available.length+' teams available for '+p+'. Only unused teams can be selected.';
  $('quickError').textContent='';
  $('pickOverlay').classList.remove('hidden');
  document.body.style.overflow='hidden';
  $('quickTeam').focus({preventScroll:true});
 }
+$('scheduleChoices').addEventListener('click',e=>{const b=e.target.closest('.schedule-choice');if(!b)return;$('quickTeam').value=b.dataset.team;$('scheduleChoices').querySelectorAll('.schedule-choice').forEach(x=>x.classList.toggle('selected',x===b));});
+$('quickTeam').addEventListener('change',()=>{$('scheduleChoices').querySelectorAll('.schedule-choice').forEach(x=>x.classList.toggle('selected',x.dataset.team===$('quickTeam').value));});
 function closeQuickPick(){
  $('pickOverlay').classList.add('hidden');
  document.body.style.overflow='';
