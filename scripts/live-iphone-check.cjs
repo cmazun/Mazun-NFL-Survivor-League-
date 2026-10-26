@@ -39,6 +39,13 @@ const report = { url, commit: process.env.GITHUB_SHA, expectedSha256: expected, 
     const weeks = await page.locator('.original-board tbody tr').count();
     const widths = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
     report.columns = columns; report.weeks = weeks; report.widths = widths;
+    const odds = await page.locator('.original-board thead .season-chance').allTextContents();
+    report.leagueWinProbabilities = odds;
+    if (odds.length !== 4 || odds.some(x => !/\\d+%\\s*LEAGUE WIN/.test(x))) errors.push('League-winning probability labels not rendered on live site');
+    if (odds.length === 4 && Math.abs(odds.reduce((sum,x) => sum + Number(x.match(/(\\d+)%/)[1]), 0) - 100) > 2) errors.push('League probabilities do not sum to approximately 100%');
+    const chanceVisible = await page.locator('.original-board thead .season-chance').first().isVisible();
+    if (!chanceVisible) errors.push('League-winning probability labels hidden on live site');
+
     if (columns !== 5) errors.push('Expected 5 table headers, got ' + columns);
     if (weeks !== 18) errors.push('Expected 18 weeks, got ' + weeks);
     if (widths.document > widths.viewport + 3) errors.push('Horizontal overflow');
