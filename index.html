@@ -70,6 +70,31 @@
 .column-record .record-chip{font-size:17px!important;padding:3px 6px!important;border-radius:7px!important}
 @media(max-width:700px){.column-record .record-chip{font-size:16px!important;padding:3px 5px!important}}
 @media(max-width:370px){.column-record .record-chip{font-size:15px!important;padding:3px 4px!important}}
+
+/* Compact iPhone header and focused current-week indicator */
+.original-board .player-heading{font-size:18px!important;font-weight:900;letter-spacing:-.4px}
+.original-board .column-record{margin-top:4px!important}
+.original-board .rank-label{margin-top:4px!important}
+.original-board tr.current-week-row td{border-top:0!important;border-bottom:1px solid #2b475e!important}
+.original-board tr.current-week-row td:first-child{background:transparent!important}
+.current-week-number{display:inline-flex;align-items:center;justify-content:center;width:25px;height:28px;border-radius:7px;background:#ad812b;color:#08192a;font-weight:900}
+.original-board .add-pick{min-height:60px!important}
+.original-board .add-pick .plus{display:inline-flex;align-items:center;justify-content:center;width:33px;height:33px;border-radius:50%;background:#183e49;border:1px solid #397b79;color:#8df6d9;font-size:24px}
+@media(max-width:700px){
+ .wrap{padding-top:10px}
+ header h1{margin:4px 0;font-size:25px}
+ header p{margin:3px 0;font-size:11px}
+ .tabs{margin-top:9px;margin-bottom:8px}
+ .panel:has(#originalBoard)>p{margin:4px 0 7px}
+ .original-board .player-heading{font-size:16px!important}
+ .original-board thead th{padding:8px 1px!important}
+ .original-board .column-record .record-chip{font-size:15px!important;padding:2px 5px!important}
+ .original-board .rank-label{font-size:9px!important;padding:4px 4px!important}
+ .original-board tbody tr{height:68px!important}
+ .original-board tbody td{padding:5px 1px!important}
+ .original-board .add-pick{min-height:55px!important}
+ .original-board .add-pick .plus{width:29px;height:29px;font-size:22px}
+}
 </style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
 <nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
 <section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
@@ -112,7 +137,7 @@ const ranking=players.map(p=>({name:p,...totals(p)})).sort((a,b)=>b.w-a.w||a.l-b
 const leaderNames=ranking.filter(x=>x.w===ranking[0].w&&x.l===ranking[0].l).map(x=>x.name);
 const rankOf=p=>{const t=totals(p);return 1+ranking.filter(x=>x.w>t.w||(x.w===t.w&&x.l<t.l)).length};
 const ordinal=n=>n+(n===1?'st':n===2?'nd':n===3?'rd':'th');
-$('originalBoard').innerHTML='<table class="original-board"><thead><tr><th class="wk">WK</th>'+players.map(p=>'<th class="'+(leaderNames.includes(p)?'leader-col':'')+'"><span class="player-heading">'+p.toUpperCase()+'</span><div class="column-record" id="record-'+p+'"></div></th>').join('')+'</tr></thead><tbody>'+Array.from({length:18},(_,i)=>'<tr data-week="'+(i+1)+'" class="'+(currentNflWeek===i+1?'current-week-row':'')+'"><td class="wk">'+(i+1)+'</td>'+players.map(p=>{let x=data[p].find(x=>x.week===i+1);return '<td class="pick-cell '+(x?'result-'+x.result.toLowerCase():'empty-cell')+'" data-player="'+p+'" data-week="'+(i+1)+'" role="button" tabindex="0" aria-label="'+(x?'Edit':'Add')+' '+p+' week '+(i+1)+' pick">'+(x?'<div class="pick">'+logo(x.team)+'<span class="team-short">'+shortTeam(x.team)+'</span>'+badge(x.result)+(x.source==='verified'?'<span class="verified-label" title="Verified from final game score">✓ NFL</span>':x.source==='manual'?'<span class="verified-label manual-label">Manual</span>':'')+'</div>' :'<div class="add-pick"><span class="plus">+</span><span>Pick</span></div>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>';players.forEach(p=>{const t=totals(p),el=$('record-'+p);if(el)el.innerHTML='<span class="record-chip"><span class="wins">'+t.w+'</span><span class="muted">-</span><span class="losses">'+t.l+'</span></span><small class="rank-label rank-'+rankOf(p)+'">'+(rankOf(p)===1?'★ ':'')+ordinal(rankOf(p))+' place'+(t.p?' · '+t.p+' pending':'')+'</small>';});
+$('originalBoard').innerHTML='<table class="original-board"><thead><tr><th class="wk">WK</th>'+players.map(p=>'<th class="'+(leaderNames.includes(p)?'leader-col':'')+'"><span class="player-heading">'+p.toUpperCase()+'</span><div class="column-record" id="record-'+p+'"></div></th>').join('')+'</tr></thead><tbody>'+Array.from({length:18},(_,i)=>'<tr data-week="'+(i+1)+'" class="'+(currentNflWeek===i+1?'current-week-row':'')+'"><td class="wk">'+(i+1)+'</td>'+players.map(p=>{let x=data[p].find(x=>x.week===i+1);return '<td class="pick-cell '+(x?'result-'+x.result.toLowerCase():'empty-cell')+'" data-player="'+p+'" data-week="'+(i+1)+'" role="button" tabindex="0" aria-label="'+(x?'Edit':'Add')+' '+p+' week '+(i+1)+' pick">'+(x?'<div class="pick">'+logo(x.team)+'<span class="team-short">'+shortTeam(x.team)+'</span>'+badge(x.result)+(x.source==='verified'?'<span class="verified-label" title="Verified from final game score">✓ NFL</span>':x.source==='manual'?'<span class="verified-label manual-label">Manual</span>':'')+'</div>' :'<div class="add-pick"><span class="plus">+</span></div>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>';players.forEach(p=>{const t=totals(p),el=$('record-'+p);if(el)el.innerHTML='<span class="record-chip"><span class="wins">'+t.w+'</span><span class="muted">-</span><span class="losses">'+t.l+'</span></span><small class="rank-label rank-'+rankOf(p)+'">'+(rankOf(p)===1?'★ ':'')+ordinal(rankOf(p))+' place'+(t.p?' · '+t.p+' pending':'')+'</small>';});
 $('latest').innerHTML='<table><thead><tr><th>Player</th><th>Week</th><th>Pick</th><th>Result</th></tr></thead><tbody>'+players.map(p=>{let x=data[p].slice().sort((a,b)=>b.week-a.week)[0];return '<tr><td>'+p+'</td><td>'+(x?.week||'—')+'</td><td>'+(x?.team||'—')+'</td><td>'+(x?badge(x.result):'—')+'</td></tr>'}).join('')+'</tbody></table>';
 $('historyTable').innerHTML='<table><thead><tr><th>Week</th>'+players.map(p=>'<th>'+p+'</th>').join('')+'</tr></thead><tbody>'+Array.from({length:18},(_,i)=>'<tr><td>'+ (i+1) +'</td>'+players.map(p=>{let x=data[p].find(x=>x.week===i+1);return '<td>'+(x?logo(x.team)+x.team+'<br>'+badge(x.result):'<span class="muted">—</span>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>';
 const p=$('teamPlayer').value||players[0],used=new Set(data[p].map(x=>x.team));$('teamCount').textContent=(32-used.size)+' of 32 teams available for '+p;$('teamList').innerHTML=teams.map(t=>'<span class="badge" style="margin:5px;'+(used.has(t)?'opacity:.35;text-decoration:line-through':'')+'">'+t+'</span>').join('');syncEdit()}
