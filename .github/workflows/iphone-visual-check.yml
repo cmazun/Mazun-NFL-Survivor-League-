@@ -11,7 +11,7 @@ concurrency:
 jobs:
   iphone-visual-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,6 +33,8 @@ jobs:
         run: sudo npx playwright install-deps chromium
       - name: Capture iPhone screenshots and test interactions
         run: node scripts/iphone-check.cjs
+      - name: Wait for matching GitHub Pages deployment and capture live iPhone screenshot
+        run: node scripts/live-iphone-check.cjs
       - name: Upload screenshots and test report
         if: always()
         uses: actions/upload-artifact@v4
