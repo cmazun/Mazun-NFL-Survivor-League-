@@ -107,6 +107,9 @@
 .schedule-text strong{font-size:13px}.schedule-text small{font-size:11px;color:#c0d5e0}
 .schedule-loading{font-size:12px;color:#bed0df;padding:12px}
 @media(max-width:700px){.season-chance{font-size:13px;margin-bottom:5px}.season-chance small{font-size:7px;letter-spacing:0}.schedule-choices{max-height:34vh}}
+/* Unified, high-contrast win-loss record colors */
+.original-board .column-record .record-chip .wins,
+.original-board .column-record .record-chip .losses{color:#f1f7ff!important}
 </style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
 <nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
 <section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
