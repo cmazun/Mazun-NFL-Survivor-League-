@@ -110,8 +110,8 @@
 /* Unified, high-contrast win-loss record colors */
 .original-board .column-record .record-chip .wins,
 .original-board .column-record .record-chip .losses{color:#f1f7ff!important}
-</style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
-<nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
+.publish-panel{margin-top:10px;padding:12px;border:1px solid #385a72;border-radius:11px;background:#112c41}.publish-panel strong{color:#edf4ff}.publish-panel p{margin:5px 0 10px;font-size:12px}.publish-panel .action{font-size:12px;padding:9px 12px}.publish-panel input{max-width:100%;width:250px;padding:9px;background:#071b2d;border:1px solid #4b6c82;border-radius:7px;color:white}.publish-status{font-size:12px;color:#bcd3e4;margin-top:8px;overflow-wrap:anywhere}</style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
+<div class="publish-panel"><strong>League publishing · Corey only</strong><p>Everyone can view published picks. Only Corey can publish changes using his authorized GitHub account.</p><button class="action primary" id="publishPicks" type="button">Publish Picks · Corey Only</button><div id="publishAuth" class="hidden" style="margin-top:10px"><label for="publishToken" class="note">Corey's fine-grained GitHub token (Contents: Read and write, this repository only)</label><br><input id="publishToken" type="password" autocomplete="off" placeholder="Paste token to authorize"><button class="action" id="confirmPublish" type="button">Authorize &amp; Publish</button><p class="note">Token is used only for this request and is never stored on the website or in your browser storage.</p></div><div id="publishStatus" class="publish-status">Published picks are visible to everyone. Changes made here stay on this device until Corey publishes.</div></div><nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
 <section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
 <section id="history" class="hidden"><div class="panel"><h2>Season Pick History</h2><div id="historyTable"></div></div></section>
 <section id="manage" class="hidden"><div class="panel"><h2>Add or update a pick</h2><div class="controls"><label class="field">Player<select id="player"></select></label><label class="field">Week<select id="week"></select></label><label class="field">NFL team<select id="team"></select></label><label class="field">Result<select id="result"><option value="P">Pending</option><option value="W">Win</option><option value="L">Loss</option></select></label><button class="action primary" id="save">Save Pick</button><button class="action" id="remove">Remove Pick</button></div><p id="feedback" class="note"></p><p class="note">A team can only be selected once per player across the season. Changes save on this device only.</p></div></section>
@@ -311,5 +311,50 @@ async function syncScores(){
 $('refreshScores').onclick=syncScores;
 setInterval(syncScores,300000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncScores()});
-render();displayUpdate();findCurrentWeek();syncScores();
+
+const publishedPath='published-picks.json';
+const githubApi='https://api.github.com/repos/cmazun/Mazun-NFL-Survivor-League-/contents/'+publishedPath;
+function validPublished(obj){return obj&&players.every(p=>Array.isArray(obj[p])&&obj[p].every(x=>Number.isInteger(x.week)&&x.week>=1&&x.week<=18&&teams.includes(x.team)&&['W','L','P'].includes(x.result)));}
+async function loadPublishedPicks(){
+ try{
+  const r=await fetch('./'+publishedPath+'?t='+Date.now(),{cache:'no-store'});
+  if(!r.ok)throw Error('Published picks unavailable');
+  const obj=await r.json();
+  if(!validPublished(obj))throw Error('Invalid published picks');
+  if(!localStorage.getItem(updatedKey)){data=obj;render();$('updatedAt').textContent='Showing published picks · Shared with everyone';}
+  $('publishStatus').textContent=localStorage.getItem(updatedKey)?'Local edits on this device · Corey can publish them.':'Showing published league picks · Corey is the only publisher.';
+ }catch(e){$('publishStatus').textContent='Published picks could not be loaded; showing saved/default picks.';}
+}
+$('publishPicks').onclick=()=>{$('publishAuth').classList.toggle('hidden');$('publishStatus').textContent='Only Corey’s authorized GitHub account can publish. Other visitors should not enter credentials.';};
+$('confirmPublish').onclick=async()=>{
+ const token=$('publishToken').value.trim(),status=$('publishStatus'),btn=$('confirmPublish');
+ if(!token){status.textContent='Enter Corey’s GitHub token first.';return;}
+ btn.disabled=true;status.textContent='Verifying Corey’s GitHub account…';
+ try{
+  const headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+  const who=await fetch('https://api.github.com/user',{headers});
+  if(!who.ok)throw Error('GitHub authorization failed ('+who.status+').');
+  const account=await who.json();
+  if(account.login?.toLowerCase()!=='cmazun')throw Error('Only Corey (GitHub: cmazun) may publish. Signed in as '+account.login+'.');
+  status.textContent='Corey verified · Publishing shared picks…';
+  const old=await fetch(githubApi,{headers});
+  if(!old.ok&&old.status!==404)throw Error('Could not read published file ('+old.status+').');
+  const existing=old.ok?await old.json():null;
+  const payload=JSON.stringify(data,null,2)+'\n';
+  const bytes=new TextEncoder().encode(payload);
+  let binary='';for(const byte of bytes)binary+=String.fromCharCode(byte);
+  const body={message:'Publish survivor league picks (Corey)',content:btoa(binary),branch:'main'};
+  if(existing?.sha)body.sha=existing.sha;
+  const saved=await fetch(githubApi,{method:'PUT',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!saved.ok){const detail=await saved.json().catch(()=>({}));throw Error('Publish failed ('+saved.status+'): '+(detail.message||'Check token repository permissions.'));}
+  localStorage.removeItem(updatedKey);
+  localStorage.removeItem(key);
+  status.textContent='Published successfully! GitHub Pages normally updates within a few minutes. Everyone will see these picks after refreshing.';
+  $('updatedAt').textContent='Picks published · Awaiting website deployment';
+  $('publishAuth').classList.add('hidden');
+ }catch(e){status.textContent=e.message;}
+ finally{$('publishToken').value='';btn.disabled=false;}
+};
+
+render();displayUpdate();loadPublishedPicks();findCurrentWeek();syncScores();
 </script></body></html>
