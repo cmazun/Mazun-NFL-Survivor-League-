@@ -71,7 +71,29 @@ const path = require('path');
   await page.screenshot({ path: 'screenshots/iphone-pick-dialog.png', fullPage: false });
 
   await page.locator('#quickCancel').click();
-  const featureReport = { oddsText, changedOdds, recordColors, matchupCards: await choices.count(), selectedTeam: 'Buffalo Bills' };
+  // Regression: ESPN's second competitor must receive its win/loss, not stay pending.
+  await page.route('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?*', async route => {
+    const u = new URL(route.request().url());
+    const week = Number(u.searchParams.get('week'));
+    const events = week === 7 ? [{
+      status:{type:{completed:true}},competitions:[{competitors:[
+        {score:'10',team:{abbreviation:'NYG'}},
+        {score:'20',team:{abbreviation:'DEN'}}
+      ]}]
+    }] : [];
+    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({events})});
+  });
+  await page.waitForFunction(() => !syncing, {timeout:15000});
+  const denverResult = await page.evaluate(async () => {
+    data.Ryan.push({week:7,team:'Denver Broncos',result:'P',source:'manual',manualResult:false});
+    await syncScores();
+    const result = data.Ryan.find(x=>x.week===7&&x.team==='Denver Broncos')?.result;
+    data.Ryan = data.Ryan.filter(x=>!(x.week===7&&x.team==='Denver Broncos'));
+    render();
+    return result;
+  });
+  if (denverResult !== 'W') errors.push('Final-game winner in second ESPN competitor position stayed ' + denverResult);
+  const featureReport = { oddsText, changedOdds, recordColors, denverResult, matchupCards: await choices.count(), selectedTeam: 'Buffalo Bills' };
   const widths = await page.evaluate(() => ({ viewport: innerWidth, doc: document.documentElement.scrollWidth }));
   if (widths.doc > widths.viewport + 3) errors.push('Horizontal overflow: ' + JSON.stringify(widths));
   fs.writeFileSync('screenshots/report.json', JSON.stringify({ date: new Date().toISOString(), columns, weeks: picks, widths, features: featureReport, errors }, null, 2));
