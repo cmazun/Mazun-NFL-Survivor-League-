@@ -35,9 +35,20 @@
  .original-board .rank-label{margin-top:6px}
 }
 @media(max-width:370px){.original-board .player-heading{font-size:14px!important}.original-board .team-short{font-size:10px}.original-board .badge{font-size:9px;padding:3px 4px}}
+
+.score-strip{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#102b3d;border:1px solid #28556a;border-radius:11px;color:#b9e7d9;font-size:12px;font-weight:700}
+.score-dot{height:8px;width:8px;flex:none;background:#36d6a8;border-radius:50%}
+.score-strip #scoreStripText{flex:1;min-width:0}
+.score-strip .action{font-size:12px;padding:6px 10px;min-height:36px;white-space:nowrap}
+.week-label{font-size:11px;font-weight:800;color:#ffe4a3;background:#70531c;border-radius:20px;padding:5px 8px;vertical-align:middle;margin-left:5px;white-space:nowrap}
+.original-board .leader-col{background-color:rgba(208,165,58,.055)}
+.original-board thead th.leader-col{box-shadow:inset 0 3px #d4ae53}
+.original-board tr.current-week-row td{border-top:2px solid #d8b45e;border-bottom:2px solid #d8b45e}
+.original-board tr.current-week-row td:first-child{color:#ffe2a2;background:#58441f}
+@media(max-width:700px){.score-strip{padding:7px 9px;margin-bottom:10px}.score-strip .action{min-height:36px!important;width:auto!important}.week-label{font-size:9px;padding:4px 6px}.panel:has(#originalBoard){margin-top:0}.original-board tr.current-week-row td{border-top-width:2px;border-bottom-width:2px}}
 </style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
 <nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
-<section id="overview"><div class="panel" style="margin-top:0"><div class="controls"><div><strong>Automatic NFL Results</strong><p class="note" style="margin:5px 0">Final scores fill pending picks when this page is open. Original and manually entered results are protected. Checks every 5 minutes.</p></div><button class="action" id="refreshScores">Refresh scores now</button></div></div><div class="panel"><h2>Original Scorecard Layout</h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
+<section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
 <section id="history" class="hidden"><div class="panel"><h2>Season Pick History</h2><div id="historyTable"></div></div></section>
 <section id="manage" class="hidden"><div class="panel"><h2>Add or update a pick</h2><div class="controls"><label class="field">Player<select id="player"></select></label><label class="field">Week<select id="week"></select></label><label class="field">NFL team<select id="team"></select></label><label class="field">Result<select id="result"><option value="P">Pending</option><option value="W">Win</option><option value="L">Loss</option></select></label><button class="action primary" id="save">Save Pick</button><button class="action" id="remove">Remove Pick</button></div><p id="feedback" class="note"></p><p class="note">A team can only be selected once per player across the season. Changes save on this device only.</p></div></section>
 <section id="teams" class="hidden"><div class="panel"><h2>Teams remaining</h2><div class="controls"><label class="field">Player<select id="teamPlayer"></select></label></div><p id="teamCount"></p><div id="teamList"></div></div></section>
@@ -72,8 +83,9 @@ for(const p of players)for(const x of data[p]){
 const $=id=>document.getElementById(id);const save=()=>{localStorage.setItem(key,JSON.stringify(data));localStorage.setItem(updatedKey,new Date().toISOString());displayUpdate()};
 function badge(v){return '<span class="badge '+v+'">'+(v==='W'?'WIN':v==='L'?'LOSS':'PENDING')+'</span>'}
 const shortTeam=t=>({ 'Los Angeles Chargers':'LAC','Los Angeles Rams':'LAR','New England Patriots':'NE','New York Giants':'NYG','New York Jets':'NYJ','San Francisco 49ers':'SF','Green Bay Packers':'GB','Tampa Bay Buccaneers':'TB','Kansas City Chiefs':'KC','New Orleans Saints':'NO','Las Vegas Raiders':'LV'}[t]||t.split(' ').slice(-1)[0]);
-function render(){$('originalBoard').innerHTML='<table class="original-board"><thead><tr><th class="wk">WK</th>'+players.map(p=>'<th><span class="player-heading">'+p.toUpperCase()+'</span><div class="column-record" id="record-'+p+'"></div></th>').join('')+'</tr></thead><tbody>'+Array.from({length:18},(_,i)=>'<tr><td class="wk">'+(i+1)+'</td>'+players.map(p=>{let x=data[p].find(x=>x.week===i+1);return '<td class="pick-cell '+(x?'':'empty-cell')+'" data-player="'+p+'" data-week="'+(i+1)+'" role="button" tabindex="0" aria-label="'+(x?'Edit':'Add')+' '+p+' week '+(i+1)+' pick">'+(x?'<div class="pick">'+logo(x.team)+'<span class="team-short">'+shortTeam(x.team)+'</span>'+badge(x.result)+(x.source==='verified'?'<span class="verified-label" title="Verified from final game score">✓ NFL</span>':x.source==='manual'?'<span class="verified-label manual-label">Manual</span>':'')+'</div>' :'<div class="add-pick"><span class="plus">+</span><span>Pick</span></div>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>';const totals=p=>({w:data[p].filter(x=>x.result==='W').length,l:data[p].filter(x=>x.result==='L').length,p:data[p].filter(x=>x.result==='P').length});
+function render(){$('originalBoard').innerHTML='<table class="original-board"><thead><tr><th class="wk">WK</th>'+players.map(p=>'<th class="'+(leaderNames.includes(p)?'leader-col':'')+'"><span class="player-heading">'+p.toUpperCase()+'</span><div class="column-record" id="record-'+p+'"></div></th>').join('')+'</tr></thead><tbody>'+Array.from({length:18},(_,i)=>'<tr data-week="'+(i+1)+'" class="'+(currentNflWeek===i+1?'current-week-row':'')+'"><td class="wk">'+(i+1)+'</td>'+players.map(p=>{let x=data[p].find(x=>x.week===i+1);return '<td class="pick-cell '+(x?'':'empty-cell')+' '+(leaderNames.includes(p)?'leader-col':'')+'" data-player="'+p+'" data-week="'+(i+1)+'" role="button" tabindex="0" aria-label="'+(x?'Edit':'Add')+' '+p+' week '+(i+1)+' pick">'+(x?'<div class="pick">'+logo(x.team)+'<span class="team-short">'+shortTeam(x.team)+'</span>'+badge(x.result)+(x.source==='verified'?'<span class="verified-label" title="Verified from final game score">✓ NFL</span>':x.source==='manual'?'<span class="verified-label manual-label">Manual</span>':'')+'</div>' :'<div class="add-pick"><span class="plus">+</span><span>Pick</span></div>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>';const totals=p=>({w:data[p].filter(x=>x.result==='W').length,l:data[p].filter(x=>x.result==='L').length,p:data[p].filter(x=>x.result==='P').length});
 const ranking=players.map(p=>({name:p,...totals(p)})).sort((a,b)=>b.w-a.w||a.l-b.l||a.name.localeCompare(b.name));
+const leaderNames=ranking.filter(x=>x.w===ranking[0].w&&x.l===ranking[0].l).map(x=>x.name);
 const rankOf=p=>{const t=totals(p);return 1+ranking.filter(x=>x.w>t.w||(x.w===t.w&&x.l<t.l)).length};
 const ordinal=n=>n+(n===1?'st':n===2?'nd':n===3?'rd':'th');
 players.forEach(p=>{const t=totals(p),el=$('record-'+p);if(el)el.innerHTML='<span class="record-chip"><span class="wins">'+t.w+'</span><span class="muted">-</span><span class="losses">'+t.l+'</span></span><small class="rank-label rank-'+rankOf(p)+'">'+(rankOf(p)===1?'★ ':'')+ordinal(rankOf(p))+' place'+(t.p?' · '+t.p+' pending':'')+'</small>';});
@@ -140,9 +152,13 @@ $('quickSave').onclick=()=>{
 
 const nflAliases={'ARI':'ari','ATL':'atl','BAL':'bal','BUF':'buf','CAR':'car','CHI':'chi','CIN':'cin','CLE':'cle','DAL':'dal','DEN':'den','DET':'det','GB':'gb','HOU':'hou','IND':'ind','JAX':'jax','KC':'kc','LV':'lv','LAC':'lac','LAR':'lar','MIA':'mia','MIN':'min','NE':'ne','NO':'no','NYG':'nyg','NYJ':'nyj','PHI':'phi','PIT':'pit','SF':'sf','SEA':'sea','TB':'tb','TEN':'ten','WSH':'wsh','WAS':'wsh'};
 let syncing=false;
+let currentNflWeek=null;
+let didAutoScroll=false;
+function setCurrentWeek(w){if(!Number.isInteger(w)||w<1||w>18)return;currentNflWeek=w;const label=$('currentWeekLabel');if(label)label.textContent='Week '+w+' · Current';render();if(!didAutoScroll){didAutoScroll=true;const row=document.querySelector('.original-board tr[data-week="'+w+'"]');if(row&&window.scrollY<100)requestAnimationFrame(()=>row.scrollIntoView({block:'center',behavior:'smooth'}));}}
+async function findCurrentWeek(){try{const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season=2026&seasontype=2',{cache:'no-store'});if(!r.ok)return;const j=await r.json();const w=Number(j.week?.number);if(w>=1&&w<=18)setCurrentWeek(w);}catch(e){console.warn('NFL current week unavailable',e)}}
 async function syncScores(){
  if(syncing)return;syncing=true;
- const el=$('scoreSync');el.textContent='NFL scores: checking…';
+ const el=$('scoreSync');el.textContent='NFL scores: checking…';$('scoreStripText').textContent='NFL scores · Checking…';
  try{
   const weeks=[...new Set(players.flatMap(p=>data[p].map(x=>x.week)))].sort((a,b)=>a-b);
   const responses=await Promise.allSettled(weeks.map(async w=>{
@@ -176,12 +192,12 @@ async function syncScores(){
   }
   if(changed){save();render();}
   const partial=good.length<weeks.length?' · some weeks unavailable':'';
-  el.textContent='NFL final scores checked: '+new Date().toLocaleString('en-US',{dateStyle:'short',timeStyle:'short'})+' · '+changed+' result'+(changed===1?'':'s')+' updated'+partial;
- }catch(e){el.textContent='NFL scores unavailable — saved picks unchanged';console.warn('NFL score sync:',e)}
+  el.textContent='NFL final scores checked: '+new Date().toLocaleString('en-US',{dateStyle:'short',timeStyle:'short'})+' · '+changed+' result'+(changed===1?'':'s')+' updated'+partial;$('scoreStripText').textContent='NFL scores · Checked '+new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})+(partial?' · Partial':' · Up to date');
+ }catch(e){el.textContent='NFL scores unavailable — saved picks unchanged';$('scoreStripText').textContent='NFL scores · Unavailable';console.warn('NFL score sync:',e)}
  finally{syncing=false}
 }
 $('refreshScores').onclick=syncScores;
 setInterval(syncScores,300000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncScores()});
-render();displayUpdate();syncScores();
+render();displayUpdate();findCurrentWeek();syncScores();
 </script></body></html>
