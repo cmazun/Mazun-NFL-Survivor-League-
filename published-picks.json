@@ -29,6 +29,12 @@
       "week": 6,
       "team": "Los Angeles Rams",
       "result": "L"
+    },
+    {
+      "week": 7,
+      "team": "Denver Broncos",
+      "result": "L",
+      "source": "verified"
     }
   ],
   "Corey": [
@@ -61,6 +67,12 @@
       "week": 6,
       "team": "Indianapolis Colts",
       "result": "L"
+    },
+    {
+      "week": 7,
+      "team": "Houston Texans",
+      "result": "L",
+      "source": "verified"
     }
   ],
   "Tyler": [
@@ -93,6 +105,12 @@
       "week": 6,
       "team": "New England Patriots",
       "result": "W"
+    },
+    {
+      "week": 7,
+      "team": "Minnesota Vikings",
+      "result": "W",
+      "source": "verified"
     }
   ],
   "Dad": [
@@ -129,7 +147,8 @@
     {
       "week": 7,
       "team": "Houston Texans",
-      "result": "P"
+      "result": "L",
+      "source": "verified"
     }
   ]
 }
