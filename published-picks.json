@@ -1,0 +1,135 @@
+{
+  "Ryan": [
+    {
+      "week": 1,
+      "team": "Los Angeles Chargers",
+      "result": "L"
+    },
+    {
+      "week": 2,
+      "team": "Tampa Bay Buccaneers",
+      "result": "L"
+    },
+    {
+      "week": 3,
+      "team": "Seattle Seahawks",
+      "result": "L"
+    },
+    {
+      "week": 4,
+      "team": "New England Patriots",
+      "result": "W"
+    },
+    {
+      "week": 5,
+      "team": "Jacksonville Jaguars",
+      "result": "W"
+    },
+    {
+      "week": 6,
+      "team": "Los Angeles Rams",
+      "result": "L"
+    }
+  ],
+  "Corey": [
+    {
+      "week": 1,
+      "team": "Detroit Lions",
+      "result": "W"
+    },
+    {
+      "week": 2,
+      "team": "Philadelphia Eagles",
+      "result": "W"
+    },
+    {
+      "week": 3,
+      "team": "Green Bay Packers",
+      "result": "L"
+    },
+    {
+      "week": 4,
+      "team": "Minnesota Vikings",
+      "result": "W"
+    },
+    {
+      "week": 5,
+      "team": "Cincinnati Bengals",
+      "result": "W"
+    },
+    {
+      "week": 6,
+      "team": "Indianapolis Colts",
+      "result": "L"
+    }
+  ],
+  "Tyler": [
+    {
+      "week": 1,
+      "team": "Jacksonville Jaguars",
+      "result": "W"
+    },
+    {
+      "week": 2,
+      "team": "Baltimore Ravens",
+      "result": "L"
+    },
+    {
+      "week": 3,
+      "team": "San Francisco 49ers",
+      "result": "W"
+    },
+    {
+      "week": 4,
+      "team": "Seattle Seahawks",
+      "result": "W"
+    },
+    {
+      "week": 5,
+      "team": "Houston Texans",
+      "result": "W"
+    },
+    {
+      "week": 6,
+      "team": "New England Patriots",
+      "result": "W"
+    }
+  ],
+  "Dad": [
+    {
+      "week": 1,
+      "team": "Jacksonville Jaguars",
+      "result": "W"
+    },
+    {
+      "week": 2,
+      "team": "Tampa Bay Buccaneers",
+      "result": "L"
+    },
+    {
+      "week": 3,
+      "team": "Detroit Lions",
+      "result": "W"
+    },
+    {
+      "week": 4,
+      "team": "Minnesota Vikings",
+      "result": "W"
+    },
+    {
+      "week": 5,
+      "team": "Dallas Cowboys",
+      "result": "L"
+    },
+    {
+      "week": 6,
+      "team": "San Francisco 49ers",
+      "result": "W"
+    },
+    {
+      "week": 7,
+      "team": "Houston Texans",
+      "result": "P"
+    }
+  ]
+}
