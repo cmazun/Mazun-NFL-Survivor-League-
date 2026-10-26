@@ -25,6 +25,12 @@ const path = require('path');
   const percentages = oddsText.map(x => Number(x.match(/([0-9]+)%/)?.[1]));
   if (percentages.length === 4 && Math.abs(percentages.reduce((a,b) => a+b,0)-100)>2) errors.push('League win percentages do not total approximately 100%');
   if (await odds.count() === 4 && !await odds.first().isVisible()) errors.push('League win percentages are not visible');
+  // Wins and losses in the header must have the same legible text color.
+  const recordColors = await page.locator('.original-board .record-chip').first().evaluate(el => ({
+    wins: getComputedStyle(el.querySelector('.wins')).color,
+    losses: getComputedStyle(el.querySelector('.losses')).color
+  }));
+  if (recordColors.wins !== recordColors.losses) errors.push('Record win/loss colors differ: ' + JSON.stringify(recordColors));
   const originalOdds = oddsText.join('|');
   // A recorded result must change the calculated probabilities.
   await page.evaluate(() => { data.Ryan.push({week:8,team:'Buffalo Bills',result:'W',source:'manual',manualResult:true}); render(); });
@@ -65,7 +71,7 @@ const path = require('path');
   await page.screenshot({ path: 'screenshots/iphone-pick-dialog.png', fullPage: false });
 
   await page.locator('#quickCancel').click();
-  const featureReport = { oddsText, changedOdds, matchupCards: await choices.count(), selectedTeam: 'Buffalo Bills' };
+  const featureReport = { oddsText, changedOdds, recordColors, matchupCards: await choices.count(), selectedTeam: 'Buffalo Bills' };
   const widths = await page.evaluate(() => ({ viewport: innerWidth, doc: document.documentElement.scrollWidth }));
   if (widths.doc > widths.viewport + 3) errors.push('Horizontal overflow: ' + JSON.stringify(widths));
   fs.writeFileSync('screenshots/report.json', JSON.stringify({ date: new Date().toISOString(), columns, weeks: picks, widths, features: featureReport, errors }, null, 2));
