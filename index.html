@@ -290,7 +290,7 @@ async function syncScores(){
    for(let i=0;i<members.length;i++){
     const abbr=nflAliases[members[i].team?.abbreviation];
     if(!abbr)continue;
-    if(scores[i]===scores[1])continue; // No winner: never mark a final as pending.
+    if(scores[0]===scores[1])continue; // A tied final has no winning side.
     const outcome=scores[i]>scores[1]?'W':'L';
     results.set(week+':'+abbr,outcome);
    }
