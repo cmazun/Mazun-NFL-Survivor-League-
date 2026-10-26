@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: iphone-visual-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   iphone-visual-check:
     runs-on: ubuntu-latest
@@ -14,10 +17,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Playwright
-        run: |
-          npm install --no-save playwright@1.58.2
-          npx playwright install --with-deps chromium
+      - name: Cache Playwright Chromium
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-1.58.2-linux
+      - name: Install Playwright package
+        run: npm install --no-save --no-audit --no-fund playwright@1.58.2
+      - name: Install browser and OS dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install OS dependencies (cached browser)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: sudo npx playwright install-deps chromium
       - name: Capture iPhone screenshots and test interactions
         run: node scripts/iphone-check.cjs
       - name: Upload screenshots and test report
@@ -25,6 +38,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: iphone-dashboard-screenshots
-          path: |
-            screenshots/
+          path: screenshots/
+          if-no-files-found: warn
           retention-days: 30
