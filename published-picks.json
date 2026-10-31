@@ -35,6 +35,11 @@
       "team": "Denver Broncos",
       "result": "L",
       "source": "verified"
+    },
+    {
+      "week": 8,
+      "team": "Dallas Cowboys",
+      "result": "P"
     }
   ],
   "Corey": [
@@ -73,6 +78,11 @@
       "team": "Houston Texans",
       "result": "L",
       "source": "verified"
+    },
+    {
+      "week": 8,
+      "team": "Jacksonville Jaguars",
+      "result": "P"
     }
   ],
   "Tyler": [
@@ -149,6 +159,11 @@
       "team": "Houston Texans",
       "result": "L",
       "source": "verified"
+    },
+    {
+      "week": 8,
+      "team": "Cincinnati Bengals",
+      "result": "P"
     }
   ]
 }
