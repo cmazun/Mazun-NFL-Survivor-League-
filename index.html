@@ -110,11 +110,11 @@
 /* Unified, high-contrast win-loss record colors */
 .original-board .column-record .record-chip .wins,
 .original-board .column-record .record-chip .losses{color:#f1f7ff!important}
-.publish-panel{margin-top:10px;padding:12px;border:1px solid #385a72;border-radius:11px;background:#112c41}.publish-panel strong{color:#edf4ff}.publish-panel p{margin:5px 0 10px;font-size:12px}.publish-panel .action{font-size:12px;padding:9px 12px}.publish-status{font-size:12px;color:#bcd3e4;margin-top:8px;overflow-wrap:anywhere}</style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
+.publish-panel{margin-top:10px;padding:12px;border:1px solid #385a72;border-radius:11px;background:#112c41}.publish-panel strong{color:#edf4ff}.publish-panel p{margin:5px 0 10px;font-size:12px}.publish-panel .action{font-size:12px;padding:9px 12px}.publish-status{font-size:12px;color:#bcd3e4;margin-top:8px;overflow-wrap:anywhere}.champion-panel{background:linear-gradient(125deg,#263b40,#172f48);border-color:#ba9a4b}.champion-label{font-size:12px;font-weight:900;letter-spacing:2px;color:#f5cc77}.champion-panel h2{color:#ffdd92}.champion-panel p{line-height:1.65}.odds-legend{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0}.odds-legend span{font-size:12px;font-weight:750}.odds-chart-scroll{overflow-x:auto}.odds-chart-scroll svg{width:100%;min-width:320px;height:auto}.facts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fact-tile{background:#17364b;border:1px solid #36536b;border-radius:11px;padding:13px}.fact-tile strong{display:block;font-size:20px;color:#eaf8ff}.fact-tile small{color:#b4cadd;line-height:1.5}@media(max-width:420px){.facts-grid{grid-template-columns:1fr 1fr}.fact-tile{padding:10px}.fact-tile strong{font-size:16px}}</style></head><body><div class="wrap"><header><div><div class="eyebrow">2026 Season • Family Competition</div><h1>Mazun NFL Survivor League</h1><p>Weekly picks, standings and team availability — all in one place.</p></div><div class="header-meta"><div class="pill">🏈 4 Players · 18 Weeks</div><div id="updatedAt" class="updated-at">Checking last update…</div><div id="scoreSync" class="updated-at">NFL scores: connecting…</div></div></header>
 <div class="publish-panel"><strong>League Updates · Managed by Corey</strong><p>Corey manages and publishes all league picks. Everyone can view the latest published standings here. To request an update, send Corey your picks.</p><div id="publishStatus" class="publish-status">Published picks are shared with everyone. Edits made in this browser are local until Corey publishes an update.</div></div>
-<nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="history">Pick History</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
-<section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
-<section id="history" class="hidden"><div class="panel"><h2>Season Pick History</h2><div id="historyTable"></div></div></section>
+<nav class="tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="manage">Manage Picks</button><button data-tab="teams">Available Teams</button><button data-tab="about">Rules & Backup</button></nav>
+<section id="overview"><div class="score-strip"><span class="score-dot"></span><span id="scoreStripText">NFL scores · Checking…</span><button class="action" id="refreshScores" aria-label="Refresh NFL scores">↻ Refresh</button></div><div class="panel"><h2>Season Scorecard <span id="currentWeekLabel" class="week-label"></span></h2><p>Tap any empty cell to select a team. Tap an existing pick to change it.</p><div id="originalBoard"></div></div><div class="panel"><h2>League championship odds · Week by week</h2><p class="note">Estimated chance of finishing with the most wins, based on results through each week. Future picks modeled as 50/50; tied first places share credit. These are illustrative projections, not sportsbook odds.</p><div id="oddsChart"></div></div><div class="panel"><h2>League Fun Facts</h2><div id="leagueFacts"></div></div><div class="panel champion-panel"><div class="champion-label">2025 LEAGUE CHAMPION</div><h2>Dad · The Original Football Oracle</h2><p>Years of watching football, sizing up the odds, and knowing when a favorite looks a little too comfortable paid off: <strong>Dad took home the 2025 Survivor League crown.</strong> Experience matters. While the younger generation studies matchups and debates the numbers, Dad has already seen every kind of upset, comeback, and fourth-quarter heartbreak.</p><p>His winning formula? A lifetime of football knowledge, a sharp eye for the right pick, and perhaps a little Fireball whiskey during the game. The Fireball doesn't improve the odds—but it might make a blown fourth-quarter lead easier to swallow.</p><p class="note">The defending champion has the bragging rights. The rest of the family has 18 weeks to take them away.</p></div><div class="panel"><h2>Latest recorded picks</h2><div id="latest"></div></div></section>
+
 <section id="manage" class="hidden"><div class="panel"><h2>Add or update a pick</h2><div class="controls"><label class="field">Player<select id="player"></select></label><label class="field">Week<select id="week"></select></label><label class="field">NFL team<select id="team"></select></label><label class="field">Result<select id="result"><option value="P">Pending</option><option value="W">Win</option><option value="L">Loss</option></select></label><button class="action primary" id="save">Save Pick</button><button class="action" id="remove">Remove Pick</button></div><p id="feedback" class="note"></p><p class="note">A team can only be selected once per player across the season. Changes save on this device only.</p></div></section>
 <section id="teams" class="hidden"><div class="panel"><h2>Teams remaining</h2><div class="controls"><label class="field">Player<select id="teamPlayer"></select></label></div><p id="teamCount"></p><div id="teamList"></div></div></section>
 <section id="about" class="hidden"><div class="panel"><h2>Rules & Data</h2><p>Each participant selects one NFL team per week. The same team cannot be selected twice by that participant. This dashboard records wins and losses without automatically eliminating players, reflecting the supplied scorecard.</p><p><strong>Important:</strong> Editing is stored in your browser's local storage, not synchronized between devices or committed to GitHub. Export your data regularly.</p><button class="action primary" id="export">Export JSON Backup</button> <label class="action" style="display:inline-block">Import JSON Backup<input id="import" type="file" accept=".json,application/json" style="display:none"></label><button class="action" id="reset">Reset to original sheet</button></div></section>
@@ -192,15 +192,62 @@ async function showScheduleChoices(p,w,available,selected){
  }catch(e){if(editingPick&&editingPick.p===p&&editingPick.w===w)el.innerHTML='<div class="schedule-loading">Schedule temporarily unavailable. You can still choose from the dropdown above.</div>';}
 }
 
+
+const chartColors=['#5bd4ff','#f8bc69','#a7e89d','#d3a7ff'];
+function historicalOdds(){
+ const last=Math.max(0,...players.flatMap(p=>data[p].filter(x=>x.result!=='P').map(x=>x.week)));
+ const rows=[];
+ for(let week=0;week<=last;week++){
+  const records=players.map(p=>{const past=data[p].filter(x=>x.week<=week&&x.result!=='P');return {wins:past.filter(x=>x.result==='W').length,played:past.length};});
+  const wins=[0,0,0,0];let state=20261026+week*31;
+  const random=()=>{state=(Math.imul(1664525,state)+1013904223)>>>0;return state/4294967296;};
+  for(let run=0;run<1600;run++){
+   const scores=records.map(t=>{let w=t.wins;for(let k=t.played;k<18;k++)if(random()<.5)w++;return w;});
+   const max=Math.max(...scores),leaders=scores.map((x,i)=>x===max?i:-1).filter(i=>i>=0);
+   for(const i of leaders)wins[i]+=1/leaders.length;
+  }
+  rows.push({week,values:wins.map(x=>x/16)});
+ }
+ return rows;
+}
+function renderOddsChart(){
+ const el=$('oddsChart');if(!el)return;
+ const rows=historicalOdds(),width=680,height=250,left=43,right=14,top=17,bottom=32,plotW=width-left-right,plotH=height-top-bottom;
+ const x=i=>left+(rows.length===1?plotW/2:i/(rows.length-1)*plotW),y=v=>top+(100-v)/100*plotH;
+ const grid=[0,25,50,75,100].map(v=>'<line x1="'+left+'" y1="'+y(v)+'" x2="'+(width-right)+'" y2="'+y(v)+'" stroke="#365268" stroke-dasharray="3 5"/><text x="'+(left-8)+'" y="'+(y(v)+4)+'" text-anchor="end" fill="#adc2d4" font-size="12">'+v+'%</text>').join('');
+ const labels=rows.map((r,i)=>'<text x="'+x(i)+'" y="'+(height-10)+'" text-anchor="middle" fill="#adc2d4" font-size="12">'+(r.week?'W'+r.week:'Start')+'</text>').join('');
+ const lines=players.map((p,j)=>{const pts=rows.map((r,i)=>x(i)+','+y(r.values[j])).join(' ');return '<polyline points="'+pts+'" fill="none" stroke="'+chartColors[j]+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'+rows.map((r,i)=>'<circle cx="'+x(i)+'" cy="'+y(r.values[j])+'" r="3.5" fill="'+chartColors[j]+'"><title>'+p+' · '+(r.week?'Week '+r.week:'Start')+': '+r.values[j].toFixed(1)+'%</title></circle>').join('');}).join('');
+ el.innerHTML='<div class="odds-legend">'+players.map((p,i)=>'<span style="color:'+chartColors[i]+'">● '+p+'</span>').join('')+'</div><div class="odds-chart-scroll"><svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Estimated league-winning probability by week for Ryan, Corey, Tyler and Dad">'+grid+labels+lines+'</svg></div><p class="note">Latest recorded result: Week '+rows[rows.length-1].week+'. Hover or tap chart points for percentages.</p>';
+}
+function renderLeagueFacts(){
+ const el=$('leagueFacts');if(!el)return;
+ const all=players.flatMap(p=>data[p].filter(x=>x.result!=='P').map(x=>({...x,player:p})));
+ const wins=all.filter(x=>x.result==='W'),losses=all.filter(x=>x.result==='L');
+ const byPlayer=players.map(p=>({p,w:all.filter(x=>x.player===p&&x.result==='W').length,l:all.filter(x=>x.player===p&&x.result==='L').length}));
+ const leader=[...byPlayer].sort((a,b)=>b.w-a.w||a.l-b.l)[0];
+ const toughest=Array.from({length:18},(_,i)=>({week:i+1,l:losses.filter(x=>x.week===i+1).length,n:all.filter(x=>x.week===i+1).length})).filter(x=>x.n).sort((a,b)=>b.l-a.l||b.week-a.week)[0];
+ const mostUsed=Object.entries(all.reduce((m,x)=>(m[x.team]=(m[x.team]||0)+1,m),{})).sort((a,b)=>b[1]-a[1])[0];
+ const best=byPlayer.filter(x=>x.w===leader.w&&x.l===leader.l).map(x=>x.p).join(' & ');
+ const facts=[
+  ['Current leader',best,leader.w+' wins · '+leader.l+' losses'],
+  ['Recorded picks',String(all.length),wins.length+' wins · '+losses.length+' losses'],
+  ['Win rate',all.length?Math.round(100*wins.length/all.length)+'%':'—','Across all finalized league picks'],
+  ['Toughest week',toughest?'Week '+toughest.week:'—',toughest?toughest.l+' losses among '+toughest.n+' finalized picks':'Awaiting results'],
+  ['Most popular NFL pick',mostUsed?mostUsed[0]:'—',mostUsed?mostUsed[1]+' selection(s)':'Awaiting picks'],
+  ['Defending champion','Dad','2025 Survivor League winner']
+ ];
+ el.innerHTML='<div class="facts-grid">'+facts.map(([label,value,detail])=>'<div class="fact-tile"><small>'+label+'</small><strong>'+value+'</strong><small>'+detail+'</small></div>').join('')+'</div>';
+}
+
 function render(){const totals=p=>({w:data[p].filter(x=>x.result==='W').length,l:data[p].filter(x=>x.result==='L').length,p:data[p].filter(x=>x.result==='P').length});
 const ranking=players.map(p=>({name:p,...totals(p)})).sort((a,b)=>b.w-a.w||a.l-b.l||a.name.localeCompare(b.name));
 const chances=seasonChances();
+renderOddsChart();renderLeagueFacts();
 const leaderNames=ranking.filter(x=>x.w===ranking[0].w&&x.l===ranking[0].l).map(x=>x.name);
 const rankOf=p=>{const t=totals(p);return 1+ranking.filter(x=>x.w>t.w||(x.w===t.w&&x.l<t.l)).length};
 const ordinal=n=>n+(n===1?'st':n===2?'nd':n===3?'rd':'th');
 $('originalBoard').innerHTML='<table class="original-board"><thead><tr><th class="wk">WK</th>'+players.map(p=>'<th class="'+(leaderNames.includes(p)?'leader-col':'')+'"><span class="season-chance" title="Estimated chance to win the league">'+chances[p]+'% <small>LEAGUE WIN</small></span><span class="player-heading">'+p.toUpperCase()+'</span><div class="column-record" id="record-'+p+'"></div></th>').join('')+'</tr></thead><tbody>'+Array.from({length:18},(_,i)=>'<tr data-week="'+(i+1)+'" class="'+(currentNflWeek===i+1?'current-week-row':'')+'"><td class="wk">'+(i+1)+'</td>'+players.map(p=>{let x=data[p].find(x=>x.week===i+1);return '<td class="pick-cell '+(x?'result-'+x.result.toLowerCase():'empty-cell')+'" data-player="'+p+'" data-week="'+(i+1)+'" role="button" tabindex="0" aria-label="'+(x?'Edit':'Add')+' '+p+' week '+(i+1)+' pick">'+(x?'<div class="pick">'+logo(x.team)+'<span class="team-short">'+shortTeam(x.team)+'</span>'+badge(x.result)+(x.source==='verified'?'<span class="verified-label" title="Verified from final game score">✓ NFL</span>':x.source==='manual'?'<span class="verified-label manual-label">Manual</span>':'')+'</div>' :'<div class="add-pick"><span class="plus">+</span></div>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>';players.forEach(p=>{const t=totals(p),el=$('record-'+p);if(el)el.innerHTML='<span class="record-chip"><span class="wins">'+t.w+'</span><span class="muted">-</span><span class="losses">'+t.l+'</span></span><small class="rank-label rank-'+rankOf(p)+'">'+(rankOf(p)===1?'★ ':'')+ordinal(rankOf(p))+' place'+(t.p?' · '+t.p+' pending':'')+'</small>';});
 $('latest').innerHTML='<table><thead><tr><th>Player</th><th>Week</th><th>Pick</th><th>Result</th></tr></thead><tbody>'+players.map(p=>{let x=data[p].slice().sort((a,b)=>b.week-a.week)[0];return '<tr><td>'+p+'</td><td>'+(x?.week||'—')+'</td><td>'+(x?.team||'—')+'</td><td>'+(x?badge(x.result):'—')+'</td></tr>'}).join('')+'</tbody></table>';
-$('historyTable').innerHTML='<table><thead><tr><th>Week</th>'+players.map(p=>'<th>'+p+'</th>').join('')+'</tr></thead><tbody>'+Array.from({length:18},(_,i)=>'<tr><td>'+ (i+1) +'</td>'+players.map(p=>{let x=data[p].find(x=>x.week===i+1);return '<td>'+(x?logo(x.team)+x.team+'<br>'+badge(x.result):'<span class="muted">—</span>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>';
 const p=$('teamPlayer').value||players[0],used=new Set(data[p].map(x=>x.team));$('teamCount').textContent=(32-used.size)+' of 32 teams available for '+p;$('teamList').innerHTML=teams.map(t=>'<span class="badge" style="margin:5px;'+(used.has(t)?'opacity:.35;text-decoration:line-through':'')+'">'+t+'</span>').join('');syncEdit()}
 function syncEdit(){let p=$('player').value,w=Number($('week').value),x=data[p].find(x=>x.week===w);$('team').value=x?.team||'';$('result').value=x?.result||'P'}
 for(const id of ['player','teamPlayer'])$(id).innerHTML=players.map(p=>'<option>'+p+'</option>').join('');
@@ -208,7 +255,7 @@ $('week').innerHTML=Array.from({length:18},(_,i)=>'<option value="'+(i+1)+'">Wee
 $('team').innerHTML='<option value="">Select team</option>'+teams.map(t=>'<option>'+t+'</option>').join('');
 for(const id of ['player','week'])$(id).addEventListener('change',syncEdit);
 $('teamPlayer').addEventListener('change',render);
-document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));for(const id of ['overview','history','manage','teams','about'])$(id).classList.toggle('hidden',id!==b.dataset.tab);render()}));
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));for(const id of ['overview','manage','teams','about'])$(id).classList.toggle('hidden',id!==b.dataset.tab);render()}));
 $('save').onclick=()=>{const p=$('player').value,w=Number($('week').value),team=$('team').value,result=$('result').value;if(!team){$('feedback').textContent='Select a team first.';return}if(data[p].some(x=>x.team===team&&x.week!==w)){$('feedback').textContent='That team was already used by '+p+'.';return}data[p]=data[p].filter(x=>x.week!==w);data[p].push({week:w,team,result,source:'manual',manualResult:true});data[p].sort((a,b)=>a.week-b.week);save();render();$('feedback').textContent='Pick saved on this device.'};
 $('remove').onclick=()=>{const p=$('player').value,w=Number($('week').value);data[p]=data[p].filter(x=>x.week!==w);save();render();$('feedback').textContent='Pick removed.'};
 $('export').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='mazun-survivor-backup.json';a.click();URL.revokeObjectURL(a.href)};
@@ -326,5 +373,5 @@ async function loadPublishedPicks(){
   $('publishStatus').textContent=localStorage.getItem(updatedKey)?'Local edits on this device · Corey can publish them.':'Showing published league picks · Corey is the only publisher.';
  }catch(e){$('publishStatus').textContent='Published picks could not be loaded; showing saved/default picks.';}
 }
-render();displayUpdate();loadPublishedPicks();findCurrentWeek();syncScores();
+render();renderOddsChart();renderLeagueFacts();displayUpdate();loadPublishedPicks();findCurrentWeek();syncScores();
 </script></body></html>
