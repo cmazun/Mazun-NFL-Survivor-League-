@@ -234,7 +234,8 @@ function renderLeagueFacts(){
   ['Win rate',all.length?Math.round(100*wins.length/all.length)+'%':'—','Across all finalized league picks'],
   ['Toughest week',toughest?'Week '+toughest.week:'—',toughest?toughest.l+' losses among '+toughest.n+' finalized picks':'Awaiting results'],
   ['Most popular NFL pick',mostUsed?mostUsed[0]:'—',mostUsed?mostUsed[1]+' selection(s)':'Awaiting picks'],
-  ['Defending champion','Dad','2025 Survivor League winner']
+  ['Defending champion','Dad','2025 Survivor League winner'],
+  ['2026 underdog watch','Ryan · Corey · Tyler','Three challengers entered 2026 chasing Dad’s crown. Will the underdogs pull off the upset?']
  ];
  el.innerHTML='<div class="facts-grid">'+facts.map(([label,value,detail])=>'<div class="fact-tile"><small>'+label+'</small><strong>'+value+'</strong><small>'+detail+'</small></div>').join('')+'</div>';
 }
