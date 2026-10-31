@@ -415,9 +415,23 @@ async function loadPublishedPicks(){
   if(!r.ok)throw Error('Published picks unavailable');
   const obj=await r.json();
   if(!validPublished(obj))throw Error('Invalid published picks');
-  if(!localStorage.getItem(updatedKey)){data=obj;render();$('updatedAt').textContent='Showing published picks · Shared with everyone';}
-  $('publishStatus').textContent=localStorage.getItem(updatedKey)?'Local edits on this device · Corey can publish them.':'Showing published league picks · Corey is the only publisher.';
- }catch(e){$('publishStatus').textContent='Published picks could not be loaded; showing saved/default picks.';}
+  // Published picks are authoritative on every device. Old local edits must not hide new weeks.
+  data=obj;
+  localStorage.setItem(key,JSON.stringify(obj));
+  localStorage.removeItem(updatedKey);
+  render();
+  $('updatedAt').textContent='Showing latest published picks · Shared with everyone';
+  $('publishStatus').textContent='Showing published league picks · Corey is the only publisher.';
+ }catch(e){
+  $('publishStatus').textContent='Published picks could not be loaded; showing saved/default picks.';
+ }
 }
-render();renderOddsChart();renderLeagueFacts();displayUpdate();loadPublishedPicks();findCurrentWeek();syncScores();
+async function startDashboard(){
+ render();displayUpdate();
+ await loadPublishedPicks();
+ await findCurrentWeek();
+ syncScores();
+}
+startDashboard();
+
 </script></body></html>
