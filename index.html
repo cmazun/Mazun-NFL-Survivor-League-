@@ -219,6 +219,37 @@ function renderOddsChart(){
  const lines=players.map((p,j)=>{const pts=rows.map((r,i)=>x(i)+','+y(r.values[j])).join(' ');return '<polyline points="'+pts+'" fill="none" stroke="'+chartColors[j]+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'+rows.map((r,i)=>'<circle cx="'+x(i)+'" cy="'+y(r.values[j])+'" r="3.5" fill="'+chartColors[j]+'"><title>'+p+' · '+(r.week?'Week '+r.week:'Start')+': '+r.values[j].toFixed(1)+'%</title></circle>').join('');}).join('');
  el.innerHTML='<div class="odds-legend">'+players.map((p,i)=>'<span style="color:'+chartColors[i]+'">● '+p+'</span>').join('')+'</div><div class="odds-chart-scroll"><svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Estimated league-winning probability by week for Ryan, Corey, Tyler and Dad">'+grid+labels+lines+'</svg></div><p class="note">Latest recorded result: Week '+rows[rows.length-1].week+'. Hover or tap chart points for percentages.</p>';
 }
+
+let upsetCache=null,upsetLoading=false;
+async function loadNflUpsets(){
+ const el=$('leagueFacts');if(!el)return;
+ const tiles=Array.from(el.querySelectorAll('.fact-tile'));
+ const tile=tiles.find(x=>x.querySelector('small')?.textContent==='NFL upset watch');if(!tile)return;
+ const show=(headline,detail)=>{tile.querySelector('strong').textContent=headline;tile.querySelectorAll('small')[1].textContent=detail;};
+ if(upsetCache){show(...upsetCache);return;}
+ if(upsetLoading)return;upsetLoading=true;
+ try{
+  const weekLimit=Math.min(18,Math.max(1,currentNflWeek||8));
+  const responses=await Promise.all(Array.from({length:weekLimit},(_,i)=>fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season=2026&seasontype=2&week='+(i+1)).then(r=>r.ok?r.json():null).catch(()=>null)));
+  const upsets=[];
+  responses.forEach((j,i)=>{for(const event of j?.events||[]){
+   const game=event.competitions?.[0],sides=game?.competitors||[];
+   if(!game||sides.length!==2||!event.status?.type?.completed)continue;
+   const odds=game.odds?.[0],details=odds?.details||'';
+   const match=details.match(/^([A-Za-z]{2,4})\s+-([\d.]+)/);if(!match)continue;
+   const favorite=match[1].toUpperCase(),spread=Number(match[2]);
+   const winner=sides.find(x=>x.winner===true);if(!winner)continue;
+   const favoriteSide=sides.find(x=>x.team?.abbreviation?.toUpperCase()===favorite);
+   if(!favoriteSide||winner===favoriteSide)continue;
+   upsets.push({winner:winner.team?.displayName||winner.team?.name,loser:favoriteSide.team?.displayName||favoriteSide.team?.name,spread,week:i+1});
+  }});
+  upsets.sort((a,b)=>b.spread-a.spread);
+  upsetCache=upsets.length?[upsets.length+' verified upset'+(upsets.length===1?'':'s'), 'Biggest: '+upsets[0].winner+' beat '+upsets[0].loser+' (Week '+upsets[0].week+', '+upsets[0].spread+'-point underdog).']:['Odds unavailable','No confirmed underdog wins could be calculated from available ESPN pregame lines.'];
+  show(...upsetCache);
+ }catch(e){show('Odds unavailable','Unable to verify 2026 NFL underdog wins right now.');}
+ finally{upsetLoading=false;}
+}
+
 function renderLeagueFacts(){
  const el=$('leagueFacts');if(!el)return;
  const all=players.flatMap(p=>data[p].filter(x=>x.result!=='P').map(x=>({...x,player:p})));
@@ -235,9 +266,10 @@ function renderLeagueFacts(){
   ['Toughest week',toughest?'Week '+toughest.week:'—',toughest?toughest.l+' losses among '+toughest.n+' finalized picks':'Awaiting results'],
   ['Most popular NFL pick',mostUsed?mostUsed[0]:'—',mostUsed?mostUsed[1]+' selection(s)':'Awaiting picks'],
   ['Defending champion','Dad','2025 Survivor League winner'],
-  ['2026 underdog watch','Ryan · Corey · Tyler','Three challengers entered 2026 chasing Dad’s crown. Will the underdogs pull off the upset?']
+  ['NFL upset watch','Checking 2026 results…','Looking for teams that beat the pregame betting favorite.']
  ];
  el.innerHTML='<div class="facts-grid">'+facts.map(([label,value,detail])=>'<div class="fact-tile"><small>'+label+'</small><strong>'+value+'</strong><small>'+detail+'</small></div>').join('')+'</div>';
+ loadNflUpsets();
 }
 
 function render(){const totals=p=>({w:data[p].filter(x=>x.result==='W').length,l:data[p].filter(x=>x.result==='L').length,p:data[p].filter(x=>x.result==='P').length});
