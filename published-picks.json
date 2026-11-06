@@ -39,7 +39,7 @@
     {
       "week": 8,
       "team": "Dallas Cowboys",
-      "result": "P"
+      "result": "L"
     }
   ],
   "Corey": [
@@ -81,8 +81,8 @@
     },
     {
       "week": 8,
-      "team": "Jacksonville Jaguars",
-      "result": "P"
+      "team": "Kansas City Chiefs",
+      "result": "L"
     }
   ],
   "Tyler": [
@@ -118,7 +118,7 @@
     },
     {
       "week": 7,
-      "team": "Minnesota Vikings",
+      "team": "Cincinnati Bengals",
       "result": "W",
       "source": "verified"
     }
@@ -162,8 +162,8 @@
     },
     {
       "week": 8,
-      "team": "Cincinnati Bengals",
-      "result": "P"
+      "team": "Kansas City Chiefs",
+      "result": "L"
     }
   ]
 }
