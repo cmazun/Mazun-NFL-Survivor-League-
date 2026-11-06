@@ -81,8 +81,13 @@
     },
     {
       "week": 8,
+      "team": "Jacksonville Jaguars",
+      "result": "W"
+    },
+    {
+      "week": 9,
       "team": "Kansas City Chiefs",
-      "result": "L"
+      "result": "P"
     }
   ],
   "Tyler": [
@@ -118,9 +123,14 @@
     },
     {
       "week": 7,
-      "team": "Cincinnati Bengals",
+      "team": "Minnesota Vikings",
       "result": "W",
       "source": "verified"
+    },
+    {
+      "week": 8,
+      "team": "Cincinnati Bengals",
+      "result": "W"
     }
   ],
   "Dad": [
@@ -162,8 +172,13 @@
     },
     {
       "week": 8,
+      "team": "Cincinnati Bengals",
+      "result": "W"
+    },
+    {
+      "week": 9,
       "team": "Kansas City Chiefs",
-      "result": "L"
+      "result": "P"
     }
   ]
 }
