@@ -40,6 +40,11 @@
       "week": 8,
       "team": "Dallas Cowboys",
       "result": "L"
+    },
+    {
+      "week": 9,
+      "team": "San Francisco 49ers",
+      "result": "P"
     }
   ],
   "Corey": [
@@ -131,6 +136,11 @@
       "week": 8,
       "team": "Cincinnati Bengals",
       "result": "W"
+    },
+    {
+      "week": 9,
+      "team": "Kansas City Chiefs",
+      "result": "P"
     }
   ],
   "Dad": [
