@@ -459,7 +459,7 @@ async function loadPublishedPicks(){
 async function renderGiantsWeekly(){
  const el=document.getElementById('giantsWeeklyContent');if(!el)return;
  try{
-  const w=Number(currentWeek)||9;
+  const w=Number(currentNflWeek)||9;
   const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season=2026&seasontype=2&week='+w+'&_='+Date.now(),{cache:'no-store'});
   if(!r.ok)throw Error('scoreboard unavailable');
   const j=await r.json();
