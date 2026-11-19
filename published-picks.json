@@ -45,6 +45,16 @@
       "week": 9,
       "team": "San Francisco 49ers",
       "result": "P"
+    },
+    {
+      "week": 10,
+      "team": "Buffalo Bills",
+      "result": "P"
+    },
+    {
+      "week": 11,
+      "team": "Houston Texans",
+      "result": "P"
     }
   ],
   "Corey": [
@@ -92,6 +102,16 @@
     {
       "week": 9,
       "team": "Kansas City Chiefs",
+      "result": "P"
+    },
+    {
+      "week": 10,
+      "team": "Los Angeles Rams",
+      "result": "P"
+    },
+    {
+      "week": 11,
+      "team": "Denver Broncos",
       "result": "P"
     }
   ],
@@ -141,6 +161,16 @@
       "week": 9,
       "team": "Kansas City Chiefs",
       "result": "P"
+    },
+    {
+      "week": 10,
+      "team": "Buffalo Bills",
+      "result": "P"
+    },
+    {
+      "week": 11,
+      "team": "Denver Broncos",
+      "result": "P"
     }
   ],
   "Dad": [
@@ -188,6 +218,16 @@
     {
       "week": 9,
       "team": "Kansas City Chiefs",
+      "result": "P"
+    },
+    {
+      "week": 10,
+      "team": "Los Angeles Rams",
+      "result": "P"
+    },
+    {
+      "week": 11,
+      "team": "Chicago Bears",
       "result": "P"
     }
   ]
